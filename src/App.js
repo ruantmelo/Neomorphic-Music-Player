@@ -1,26 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState } from 'react';
+import { BrowserRouter, Route, Switch as SwitchRouter } from "react-router-dom";
+import { Button } from './components/Button/index';
+import { GlobalStyle } from './styles/GlobalStyle';
+import { ThemeContext, themes } from './styles/themes';
 
-function App() {
+import Switch from '@material-ui/core/Switch';
+
+const ThemeSwitch = props => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ThemeContext.Consumer>
+      {({ theme, toggleTheme }) => (
+        <Switch onChange={toggleTheme} />
+
+      )
+      }
+    </ThemeContext.Consumer>
+  )
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleTheme = () => {
+      this.setState(state => ({
+        theme:
+          state.theme === themes.dark
+            ? themes.light
+            : themes.dark,
+      }));
+    };
+
+    // Estado também contém a função de atualização
+    // Passando para o provedor de contexto
+    this.state = {
+      theme: themes.light,
+      toggleTheme: this.toggleTheme,
+    };
+  }
+
+  render() {
+    // Todo o estado é passado para o provedor
+    return (
+      <BrowserRouter>
+        <GlobalStyle />
+        <ThemeContext.Provider value={this.state}>
+          <ThemeSwitch />
+          <SwitchRouter>
+            <Route path="/">
+              <Fragment>
+                <h1>Hello World</h1>
+                <Button>Teste</Button>
+              </Fragment>
+            </Route>
+          </SwitchRouter>
+        </ThemeContext.Provider>
+
+      </BrowserRouter>
+
+    );
+  }
 }
 
 export default App;
