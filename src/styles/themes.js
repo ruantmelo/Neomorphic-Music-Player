@@ -2,8 +2,9 @@ import { createContext } from 'react'
 
 export const themes = {
     light: {
+        name: 'light',
         surface: '#808080',
-        alternative: '#c1442e',
+        alternative: { main: '#e34c32', light: '#f03e1f' },
 
         primary: {
             main: '#f0f0f0',
@@ -13,8 +14,9 @@ export const themes = {
         secondary: '#201f25'
     },
     dark: {
+        name: 'dark',
         surface: 'white',
-        alternative: '#c1442e',
+        alternative: { main: '#e34c32', light: '#f03e1f' },
 
         primary: {
             main: '#201f25',
