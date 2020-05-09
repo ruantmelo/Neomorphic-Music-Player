@@ -18,6 +18,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const ThemeSwitch = props => {
     const swClasses = switchStyles();
+
     const themeContext = useContext(ThemeContext);
     const { theme, toggleTheme } = themeContext;
 
@@ -29,7 +30,7 @@ const ThemeSwitch = props => {
         <Container display='flex' alignItems='center'>
             {theme.name === 'light' ? <Brightness5Icon classes={{ root: isClass.root }} /> : <Brightness5OutlinedIcon classes={{ root: isClass.root }} />}
 
-            <Switch onChange={toggleTheme} classes={{ root: swClasses.root, switchBase: swClasses.switchBase, checked: swClasses.checked, track: swClasses.track }} />
+            <Switch checked={theme.name === 'dark'} onChange={toggleTheme} classes={{ root: swClasses.root, switchBase: swClasses.switchBase, checked: swClasses.checked, track: swClasses.track }} />
 
             {theme.name === 'dark' ? <Brightness2Icon classes={{ root: imClass.root }} /> : <Brightness2OutlinedIcon classes={{ root: imClass.root }} />}
         </Container>

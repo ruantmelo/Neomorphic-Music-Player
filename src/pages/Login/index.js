@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '../../components/Container'
-
+import { InputPassword } from '../../components/Input/index.js'
 
 
 class Login extends React.Component {
@@ -15,9 +15,12 @@ class Login extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container display='flex' justifyContent='center'>
 
+                <InputPassword />
             </Container>
         )
     }
 }
+
+export default Login;

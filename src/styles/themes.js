@@ -15,7 +15,7 @@ export const themes = {
     },
     dark: {
         name: 'dark',
-        surface: 'white',
+        surface: '#ebebeb',
         alternative: { main: '#e34c32', light: '#f03e1f' },
 
         primary: {

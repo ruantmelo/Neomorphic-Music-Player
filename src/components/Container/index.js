@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
     display: ${props => props.display || 'block'};
+    padding: ${props => props.padding || 'none'};
     box-sizing: ${props => props.boxSizing || 'border-box'};
     align-items: ${props => props.alignItems || 'flex-start'};
     justify-content: ${props => props.justifyContent || 'flex-start'};
