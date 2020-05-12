@@ -16,20 +16,27 @@ export const InputPassword = props => {
     const [hidden, setHidden] = useState('hidden');
     const [value, setValue] = useState('');
     const { theme } = useContext(ThemeContext);
+    //const invalidChars = [' ', '@', '*', '!', '%', ';', ':', '.']; // @ * ! % ; : . 
 
     const itClasses = makeStyles(inputStyles[theme.name])()
 
-
     const toggleHidden = () => hidden ? setHidden(false) : setHidden(true);
+    // const handleKey = ({ key }) => {
+    //     console.log(key)
+    //     return invalidChars.includes(key) ? '' : setValue(value + key)
+    // };
 
     return (
         <TextField
-            label="Password"
-            id="login-password"
+            label={props.label}
+            id={props.id}
             classes={{ root: itClasses.root }}
             type={hidden ? 'password' : 'text'}
             value={value}
+            autoComplete={'off'}
+
             onChange={(e) => setValue(e.target.value)}
+
             InputProps={{
                 endAdornment: <InputAdornment position="end">
                     <IconButton
@@ -41,6 +48,7 @@ export const InputPassword = props => {
                         {hidden ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                 </InputAdornment>,
+
             }}
 
 
@@ -54,15 +62,20 @@ export const InputText = props => {
     const [value, setValue] = useState('');
     const { theme } = useContext(ThemeContext);
     const itClasses = makeStyles(inputStyles[theme.name])()
+    const invalidChars = [' ', '@', '*', '!', '%', ';', ':', '.']; // @ * ! % ; : . 
+
+    // const handleKey = ({ key }) => invalidChars.includes(key) ? '' : setValue(value + key);
 
     return (
         <TextField
             label={props.label}
-            id="login-password"
+            id={props.id}
+            autoComplete={'off'}
+            onChange={(e) => setValue(e.target.value)}
             classes={{ root: itClasses.root }}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
             variant="filled"
+
         />
     )
 

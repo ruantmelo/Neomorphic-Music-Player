@@ -8,7 +8,7 @@ import Brightness2OutlinedIcon from '@material-ui/icons/Brightness2Outlined';
 import Brightness2Icon from '@material-ui/icons/Brightness3';
 
 import Switch from '@material-ui/core/Switch';
-import { switchStyles, iconsStyles } from './styles'
+import { switchStyles, iconsStyles } from './style'
 import Container from '../Container/index'
 import { makeStyles } from '@material-ui/core/styles';
 

@@ -1,20 +1,23 @@
 import styled from 'styled-components';
 
 const StyledButton = styled.button`
-    padding: ${props => props.padding || '10px'};
+    font-family: inherit;
+    font-size: ${({ fontSize }) => fontSize ? fontSize : '16px'};
+    padding: ${props => props.padding || '2px'};
     background: ${({ theme }) => theme.primary.main};
+    box-sizing: border-box;
     border: none;
+    width: ${({ width }) => width ? width : 'auto'};
     display: block;
-    margin: auto auto;
+    margin: ${({ margin }) => margin ? margin : '0'};
     cursor: pointer;
-    color: ${({ theme }) => theme.surface};
+    color: ${({ theme, alternative }) => alternative ? theme.alternative.main : theme.surface};
     line-height: 50px;
     border-radius: 15px;
-    margin-top: 10px;
     outline: none;
     box-shadow: ${({ theme }) => '4px 4px 10px -1px ' + theme.primary.dark + ' , -3px -3px 15px -1px ' + theme.primary.light};
 
-    &:hover{
+    &:active{
         box-shadow: ${({ theme }) => 'inset 4px 4px 6px -1px ' + theme.primary.dark + ' , inset -3px -3px 5px -1px ' + theme.primary.light};
     }
 `

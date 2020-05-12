@@ -38,7 +38,7 @@ export const iconsStyles = {
         ,
         moon: {
             root: {
-                color: themes.light.primary.dark
+                color: themes.light.primary.main
             }
         }
     },
@@ -46,7 +46,7 @@ export const iconsStyles = {
     dark: {
         sun: {
             root: {
-                color: themes.dark.primary.dark
+                color: themes.dark.primary.main
             }
         }
         ,

@@ -23,7 +23,7 @@ time, mark, audio, video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font: inherit;
+	font-family: 'Roboto', sans-serif;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -52,5 +52,8 @@ table {
 
 body{
 	background-color: white ; //#f0f0f0
+	font-family: 'Roboto', sans-serif;
 }
+
+
 `

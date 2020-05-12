@@ -5,10 +5,10 @@ import StyledHeader from './style';
 
 
 const Header = props => {
-    const themeContext = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext)
 
     return (
-        <StyledHeader theme={themeContext.theme}>
+        <StyledHeader theme={theme}>
             <ThemeSwitch />
         </StyledHeader>
     )

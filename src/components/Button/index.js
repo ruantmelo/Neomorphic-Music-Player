@@ -7,7 +7,7 @@ import { ThemeContext } from '../../styles/themes';
 export const Button = props => {
     const themeContext = useContext(ThemeContext);
     return (
-        <StyledButton theme={themeContext.theme} >Teste</StyledButton>
+        <StyledButton {...props} theme={themeContext.theme} >{props.children}</StyledButton>
 
     )
 };

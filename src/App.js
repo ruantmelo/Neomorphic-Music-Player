@@ -1,15 +1,13 @@
-import React, { Fragment } from 'react';
-import { BrowserRouter, Route, Switch as SwitchRouter } from "react-router-dom";
-import { Button } from './components/Button/index';
+import React from 'react';
+import { BrowserRouter } from "react-router-dom";
+
 import { GlobalStyle } from './styles/GlobalStyle';
 import { ThemeContext, themes } from './styles/themes';
+
 import Header from './components/Header/index';
-import Login from './pages/Login'
+import Container from './components/Container/index';
 
-
-
-
-
+import Routes from './routes';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,7 +15,6 @@ class App extends React.Component {
 
 
     this.toggleTheme = () => {
-
       this.setState(state => ({
         theme:
           state.theme === themes.dark
@@ -39,8 +36,8 @@ class App extends React.Component {
       theme: themes[theme],
       toggleTheme: this.toggleTheme,
     };
-  }
 
+  }
 
   componentDidUpdate() {
     localStorage.setItem('@music-player/theme', this.state.theme.name);
@@ -51,22 +48,12 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <GlobalStyle />
-
         <ThemeContext.Provider value={this.state}>
-
           <Header />
+          <Container transition='background-color 200ms linear' margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
+            <Routes />
+          </Container>
 
-
-          <SwitchRouter>
-            <Route path="/" exact>
-              <Fragment>
-                <Button>Teste</Button>
-              </Fragment>
-            </Route>
-            <Route path="/login" exact>
-              <Login />
-            </Route>
-          </SwitchRouter>
         </ThemeContext.Provider>
 
       </BrowserRouter>
