@@ -4,6 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import { GlobalStyle } from './styles/GlobalStyle';
 import { ThemeContext, themes } from './styles/themes';
 
+import { ThemeProvider } from "styled-components";
+
+import { StylesProvider } from '@material-ui/styles';
+
 import Header from './components/Header/index';
 import Container from './components/Container/index';
 
@@ -47,14 +51,20 @@ class App extends React.Component {
     // Todo o estado é passado para o provedor
     return (
       <BrowserRouter>
-        <GlobalStyle />
-        <ThemeContext.Provider value={this.state}>
-          <Header />
-          <Container transition='background-color 200ms linear' margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
-            <Routes />
-          </Container>
+        <StylesProvider injectFirst>
+          <GlobalStyle />
 
-        </ThemeContext.Provider>
+          <ThemeProvider theme={this.state.theme} >
+
+
+            <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
+            <Container margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
+              <Routes />
+            </Container>
+
+          </ThemeProvider>
+
+        </StylesProvider>
 
       </BrowserRouter>
 

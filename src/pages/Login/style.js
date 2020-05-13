@@ -1,6 +1,14 @@
 import styled from 'styled-components';
 
 
+
+export const Span = styled.span`
+    color: ${props => props.theme.surface};
+    display: block;
+    text-align: center;
+    margin: 35px auto 0px auto;
+`
+
 export const Title = styled.h1`
     text-align: center;
     color: #e34c32;

@@ -1,13 +1,10 @@
 import React from 'react';
-import { ThemeContext } from '../../styles/themes';
 import StyledContainer from './style';
 
 
-const Container = props => {
-    const { theme } = ThemeContext;
-
+const Container = ({ children, ...rest }) => {
     return (
-        <StyledContainer theme={theme} {...props}>{props.children}</StyledContainer>
+        <StyledContainer {...rest}>{children}</StyledContainer>
     )
 }
 

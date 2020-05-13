@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import StyledButton from './style';
-import { ThemeContext } from '../../styles/themes';
 
 
 
-export const Button = props => {
-    const themeContext = useContext(ThemeContext);
+
+export const Button = ({ children, ...rest }) => {
     return (
-        <StyledButton {...props} theme={themeContext.theme} >{props.children}</StyledButton>
+        <StyledButton {...rest} >{children}</StyledButton>
 
     )
 };

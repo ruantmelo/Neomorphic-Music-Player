@@ -55,5 +55,11 @@ body{
 	font-family: 'Roboto', sans-serif;
 }
 
+*{
+	transition: all 200ms linear
+}
+
+.dark{color: green}
+
 
 `

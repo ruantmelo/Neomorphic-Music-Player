@@ -6,13 +6,12 @@ import Container from '../../components/Container';
 import { ThemeContext } from '../../styles/themes';
 
 const NotFound = props => {
-    const { theme } = useContext(ThemeContext);
 
     return (
         <Container >
             <Img src={NotFoundSvg} />
-            <ErrorCode theme={theme}>404</ErrorCode>
-            <ErrorDescription theme={theme}>Página não encontrada</ErrorDescription>
+            <ErrorCode >404</ErrorCode>
+            <ErrorDescription >Página não encontrada</ErrorDescription>
 
         </Container>
     )

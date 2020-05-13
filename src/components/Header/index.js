@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '../../styles/themes';
+import React from 'react';
 import ThemeSwitch from '../ThemeSwitch/index';
 import StyledHeader from './style';
 
 
-const Header = props => {
-    const { theme } = useContext(ThemeContext)
+const Header = ({ themeName, toggleTheme }) => {
 
     return (
-        <StyledHeader theme={theme}>
-            <ThemeSwitch />
+        <StyledHeader>
+            <ThemeSwitch themeName={themeName} toggleTheme={toggleTheme} />
         </StyledHeader>
     )
 }

@@ -15,7 +15,7 @@ const StyledContainer = styled.div`
     left: ${props => props.left || '0'};
     transform: ${props => props.transform || 'none'};
     margin: ${props => props.margin || 'auto'};
-    background: ${({ background, theme }) => theme.primary ? theme.primary.main : (background ? background : 'none')};
+    background: ${({ background, theme }) => background ? background : theme.primary.main};
     border: ${props => props.border || 'none'};
 `
 

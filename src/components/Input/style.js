@@ -1,5 +1,48 @@
 
 import { themes } from '../../styles/themes';
+import React from 'react';
+import styled from 'styled-components';
+import { TextField } from '@material-ui/core';
+
+
+export const StyledInput = styled((props) => {
+    console.log(props)
+    return (<TextField  {...props} />)
+})`
+    color: white;
+    width: 100%;
+    font-family: inherit;
+    background: ${({ theme }) => theme.primary.main};
+    border: none;
+    margin-bottom: 15px;
+    box-shadow: ${({ theme }) => 'inset 4px 4px 6px -1px' + theme.primary.dark + ', inset -3px -3px 5px -1px ' + theme.primary.light};
+    border-radius: 15px;
+
+    & .MuiFormLabel-root{
+        color: ${({ theme }) => theme.surface};
+    }
+    
+    & label.Mui-focused{
+        color: ${({ theme }) => theme.surface};
+    }
+
+    & .MuiInputBase-root{
+        color: ${({ theme }) => theme.alternative.main};
+        border-bottom: none;
+        border-radius: 15px;
+    }
+
+    & .MuiInputBase-root::before {
+        border: none;
+    }
+
+    & .MuiFilledInput-underline::after{
+        border: none;
+    }
+    & .MuiIconButton-root{
+        color: ${({ theme }) => theme.surface};
+    }
+`
 
 
 export const inputStyles = {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link as MLink } from 'react-router-dom';
+import { StyledLink } from './style';
 
-
-
-const Link = ({ to, children }) => (
-    <MLink to={to}>{children}</MLink>
-)
+const Link = (props) => {
+    return (
+        <StyledLink  {...props} >{props.children} </StyledLink>
+    )
+}
 
 export default Link;

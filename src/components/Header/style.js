@@ -8,7 +8,6 @@ const StyledHeader = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 500ms all;
 `
 
 export default StyledHeader;
