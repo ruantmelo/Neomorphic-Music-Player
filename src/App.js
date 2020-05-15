@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 
 import { GlobalStyle } from './styles/GlobalStyle';
-import { ThemeContext, themes } from './styles/themes';
+import { themes } from './styles/themes';
 
 import { ThemeProvider } from "styled-components";
 
@@ -48,7 +48,7 @@ class App extends React.Component {
   }
 
   render() {
-    // Todo o estado é passado para o provedor
+
     return (
       <BrowserRouter>
         <StylesProvider injectFirst>
@@ -58,7 +58,7 @@ class App extends React.Component {
 
 
             <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
-            <Container margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
+            <Container position='relative' margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
               <Routes />
             </Container>
 
