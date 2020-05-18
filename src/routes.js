@@ -8,81 +8,51 @@ import NotFound from './pages/NotFound'
 import Home from './pages/Home';
 
 
-//DA PRA MELHORAR ISSO
+const routes = [
+  {
+    path: "/",
+    component: Main,
+    routes: [
+      {
+        path: "/home",
+        component: Login,
+      },
+      {
+        path: "/search",
+        component: Search
+      }
+    ]
+  },
+  {
+    path: "/login",
+    component: Login,
+    
+  }
+];
 
 const Routes = props => {
     return (
-        <SwitchRouter>
-            <Route path="/" exact>
-                <Home />
-            </Route>
-
-            <Route path="/login" exact>
-                <Login />
-            </Route>
-
-
-
-            <Route component={NotFound} />
-
-        </SwitchRouter>
+      <SwitchRouter>
+      {routes.map((route, i) => (
+        <RouteWithSubRoutes key={i} {...route} />
+      ))}
+    </SwitchRouter>
     )
 }
 
 export default Routes
 
 
-/* const routes = [
-  {
-    path: "/sandwiches",
-    component: Sandwiches
-  },
-  {
-    path: "/tacos",
-    component: Tacos,
-    routes: [
-      {
-        path: "/tacos/bus",
-        component: Bus
-      },
-      {
-        path: "/tacos/cart",
-        component: Cart
-      }
-    ]
-  }
-];
 
-export default function RouteConfigExample() {
-  return (
-    <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/tacos">Tacos</Link>
-          </li>
-          <li>
-            <Link to="/sandwiches">Sandwiches</Link>
-          </li>
-        </ul>
-
-        <Switch>
-          {routes.map((route, i) => (
-            <RouteWithSubRoutes key={i} {...route} />
-          ))}
-        </Switch>
-      </div>
-    </Router>
-  );
-}
 
 // A special wrapper for <Route> that knows how to
 // handle "sub"-routes by passing them in a `routes`
 // prop to the component it renders.
-function RouteWithSubRoutes(route) {
+export function RouteWithSubRoutes(route) {
   return (
     <Route
       path={route.path}
+      exact = {route.exact? route.exact : false}
       render={props => (
         // pass the sub-routes down to keep nesting
         <route.component {...props} routes={route.routes} />
@@ -90,27 +60,6 @@ function RouteWithSubRoutes(route) {
     />
   );
 }
-function Tacos({ routes }) {
-  return (
-    <div>
-      <h2>Tacos</h2>
-      <ul>
-        <li>
-          <Link to="/tacos/bus">Bus</Link>
-        </li>
-        <li>
-          <Link to="/tacos/cart">Cart</Link>
-        </li>
-      </ul>
-
-      <Switch>
-        {routes.map((route, i) => (
-          <RouteWithSubRoutes key={i} {...route} />
-        ))}
-      </Switch>
-    </div>
-  );
-}
 
 
-*/
+
