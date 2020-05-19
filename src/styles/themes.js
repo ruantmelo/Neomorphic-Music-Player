@@ -8,8 +8,8 @@ export const themes = {
 
         primary: {
             main: '#f0f0f0',
-            light: '#fff',
-            dark: '#d1d1d1',
+            light: '#fafafa',
+            dark: '#c4c4c4',
         },
         secondary: '#201f25'
     },
@@ -20,7 +20,7 @@ export const themes = {
 
         primary: {
             main: '#201f25',
-            light: '#3c3b42',
+            light: '#2a2930',
             dark: '#0f0f12',
         },
         secondary: '#f0f0f0'

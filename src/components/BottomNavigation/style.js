@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import React from 'react';
-import NormalContainer from '../Container';
-import { StyledButton } from '../Button/style';
+import StyledContainer from '../Container/style';
+import  StyledButton from '../Button/style.js';
 import Album from '../../img/album-matheus-kauan.jpg'
 import PauseIcon from '@material-ui/icons/Pause';
 
@@ -15,7 +15,7 @@ export const Button = styled(StyledButton)`
     margin: 2px 15px;
 `
 
-const FloatingButton = styled(Button)`
+const FloatingButton = styled(StyledButton)`
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -37,7 +37,7 @@ color: ${ ({ theme }) => theme.surface};
 }
 `
 
-const Container = styled(NormalContainer)`
+const Container = styled(StyledContainer)`
   box-shadow: ${({ theme }) => 'inset 4px 4px 6px -1px' + theme.primary.dark + ', inset -3px -3px 5px -1px ' + theme.primary.light};
   padding: 8px;
   margin: 5px 20px;
@@ -72,10 +72,10 @@ export const BarMusic = (props) => {
     <Container>
       <Img src={Album} alt='imagem da musica' />
 
-      <NormalContainer display='inline-block'>
+      <StyledContainer display='inline-block'>
         <MusicName>Quarta Cadeira (feat. Jorge e Mateus)</MusicName>
         <MusicAuthor>Matheus e Kauan</MusicAuthor>
-      </NormalContainer>
+      </StyledContainer>
 
       <FloatingButton alternative>
         <PauseIcon fontSize='inherit' />

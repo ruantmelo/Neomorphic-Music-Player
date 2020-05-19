@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const StyledContainer = styled.div`
+    overflow: hidden;
     transition: ${props => props.transition || ''};
     display: ${props => props.display || 'block'};
     border-radius: ${props => props.borderRadius || '0'};

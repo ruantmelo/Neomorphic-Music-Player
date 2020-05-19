@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
-export const StyledButton = styled.button`
+const StyledButton = styled.button`
     font-family: inherit;
-    font-size: '16px';
-    padding: 2px;
+    font-size: 18px;
+    padding: 10px;
     background: ${({ theme }) => theme.primary.main};
     box-sizing: border-box;
     border: none;
     display: block;
-    margin:  5px;
+    margin: 5px;
+    border-radius: 5px;
     cursor: pointer;
     color: ${({ theme, alternative }) => alternative ? theme.alternative.main : theme.surface};
     outline: none;
@@ -18,7 +19,7 @@ export const StyledButton = styled.button`
         box-shadow: ${({ theme }) => 'inset 4px 4px 6px -1px ' + theme.primary.dark + ' , inset -3px -3px 5px -1px ' + theme.primary.light};
     }
 `
-
+export default StyledButton;
 
 // const StyledButton = styled.button`
 //     font-family: inherit;
@@ -43,4 +44,3 @@ export const StyledButton = styled.button`
 // `
 
 
-export default StyledButton;

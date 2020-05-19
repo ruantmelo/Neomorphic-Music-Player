@@ -9,7 +9,7 @@ import { ThemeProvider } from "styled-components";
 import { StylesProvider } from '@material-ui/styles';
 
 import Header from './components/Header/index';
-import Container from './components/Container/index';
+import StyledContainer from './components/Container/style';
 
 import Routes from './routes';
 
@@ -58,9 +58,9 @@ class App extends React.Component {
 
 
             <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
-            <Container position='relative' margin='10px auto 10px auto' borderRadius='5px' padding='20px 40px' width='360px' height='640px' theme={this.state.theme}>
+            <StyledContainer position='relative' margin='10px auto 10px auto' borderRadius='5px' padding='20px 20px' width='360px' height='640px' theme={this.state.theme}>
               <Routes />
-            </Container>
+            </StyledContainer>
 
           </ThemeProvider>
 
