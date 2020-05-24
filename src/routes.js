@@ -6,11 +6,18 @@ import { Route, Switch as SwitchRouter } from "react-router-dom";
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home';
-import Main from './pages/Main';
 import Search from './pages/Search';
+import Player from './pages/Player';
 
 
 const routes = [
+
+  {
+    path: "/",
+    component: Home,
+    exact: true,
+  },
+
   {
     path: "/login",
     component: Login,
@@ -18,27 +25,20 @@ const routes = [
   },
 
   {
-    path: "/",
-    component: Main,
+    path: "/search",
+    component: Search,
     exact: true,
-    routes: [
-      {
-        path: "/",
-        component: Home,
-        exact: true,
-      },
-      {
-        path: "/search",
-        component: Search,
-        exact: true,
-      }
-    ]
   },
- 
+  {
+    path: "/player/:id",
+    component: Player,
+  },
+
   {
     path: "",
     component: NotFound,
   }
+
 ];
 
 const Routes = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import BottomNavigation from '../../components/BottomNavigation';
-import {SectionTitle} from './style';
-import {MusicSquare} from './style';
+import {SectionTitle, Container} from './style';
+import MusicCarousel from '../../components/MusicCarousel';
 import musics from '../../musics';
 
 class Home extends React.Component {
@@ -12,21 +12,25 @@ class Home extends React.Component {
 
     render() {
         return (
-            <>
-            <section>
-            <SectionTitle>Favourites</SectionTitle>
-            {musics.map((music, index) => <MusicSquare music = {music} key = {index}/>)}
-            </section>
+            <Container>
+                <section>
+                <SectionTitle>Favourites</SectionTitle>
+                    <MusicCarousel  musics = {musics.favourites}/>
+                </section>
+                
+                <section>
+                    <SectionTitle>Recently Played</SectionTitle>
+                    <MusicCarousel  musics = {musics.recent}/>
+                </section>
+                
+                <section>
+                    <SectionTitle>Popular Hits</SectionTitle>
+                    <MusicCarousel musics = {musics.popular}/>
+                </section>
+                <BottomNavigation/>
+            </Container>
+
             
-            <section>
-                <SectionTitle>Recently Played</SectionTitle>
-            </section>
-            
-            <section>
-                <SectionTitle>Popular Hits</SectionTitle>
-            </section>
-           
-            </>
         )
     }
 }

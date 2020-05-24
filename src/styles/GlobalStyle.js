@@ -51,12 +51,12 @@ table {
 }
 
 body{
-	background-color: white ; //#f0f0f0
+	background-color: white; ; //#f0f0f0
 	font-family: 'Roboto', sans-serif;
 }
 
 *{
-	transition: all 200ms linear
+	transition: background 200ms linear, box-shadow 200ms linear;
 }
 
 .dark{color: green}

@@ -12,6 +12,18 @@ import Header from './components/Header/index';
 import StyledContainer from './components/Container/style';
 
 import Routes from './routes';
+import styled from 'styled-components';
+
+const Container = styled(StyledContainer)`
+  position: relative;
+  display: block;
+  margin: 10px auto 0 auto;
+  padding: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 360px;
+  height: 640px;
+`
 
 class App extends React.Component {
   constructor(props) {
@@ -58,9 +70,9 @@ class App extends React.Component {
 
 
             <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
-            <StyledContainer position='relative' margin='10px auto 10px auto' borderRadius='5px' padding='20px 20px' width='360px' height='640px' theme={this.state.theme}>
+            <Container >
               <Routes />
-            </StyledContainer>
+            </Container>
 
           </ThemeProvider>
 

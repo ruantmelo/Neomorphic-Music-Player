@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import HappyMusic from '../../img/undraw_happy_music_g6wc.svg';
 import StyledContainer from '../../components/Container/style';
 // import { ThemeContext } from '../../styles/themes';

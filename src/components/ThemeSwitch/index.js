@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyledSwitch, iconsSun, iconsMoon } from './style'
-import StyledContainer from '../Container/style'
+import { StyledSwitch, iconsSun, iconsMoon , Container} from './style'
+
 
 
 const ThemeSwitch = props => {
@@ -10,11 +10,11 @@ const ThemeSwitch = props => {
 
     return (
 
-        <StyledContainer background='none' display='flex' alignItems='center'>
+        <Container>
             <IconSun />
             <StyledSwitch checked={props.themeName === 'dark'} onChange={props.toggleTheme} />
             <IconMoon />
-        </StyledContainer>
+        </Container>
 
     )
 }

@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react'
+import StyledContainer from '../Container/style'
 import { themes } from '../../styles/themes';
 import styled from 'styled-components';
 import Switch from '@material-ui/core/Switch';
@@ -11,6 +12,11 @@ import Brightness2OutlinedIcon from '@material-ui/icons/Brightness2Outlined';
 import Brightness2Icon from '@material-ui/icons/Brightness3';
 
 
+export const Container = styled(StyledContainer)`
+    background: none;
+    display: flex;
+    align-items: center;
+`
 
 export const iconsSun = {
     light: styled(Brightness5Icon)`

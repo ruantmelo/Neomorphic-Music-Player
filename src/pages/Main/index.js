@@ -1,7 +1,6 @@
 import React from 'react';
 import {Switch as SwitchRouter} from 'react-router-dom';
 import {RouteWithSubRoutes} from '../../routes';
-import BottomNavigation from '../../components/BottomNavigation';
 
 class Main extends React.Component{
     constructor(props){
@@ -9,7 +8,7 @@ class Main extends React.Component{
         this.audioRef = React.createRef();
     }
 
-
+    
 
     render(){
         return(
