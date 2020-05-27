@@ -130,13 +130,13 @@ const ContainerPlayerButtons = styled.div`
     }
 `
 
-export const PlayerButtons = ({paused, toggleMusic}) => (
+export const PlayerButtons = ({paused, toggle, next, prev}) => (
 
 
     <ContainerPlayerButtons>
-        <FloatingIconButton alternative ><SkipPreviousIcon fontSize = 'inherit' /></FloatingIconButton>
-        <FloatingIconButton onClick = {toggleMusic} alternative > {paused? <PlayArrowIcon fontSize = 'large' />: <PauseIcon fontSize = 'large'/>  } </FloatingIconButton>
-        <FloatingIconButton alternative ><SkipNextIcon fontSize = 'inherit' /></FloatingIconButton>
+        <FloatingIconButton onClick = {prev} alternative ><SkipPreviousIcon fontSize = 'inherit' /></FloatingIconButton>
+        <FloatingIconButton onClick = {toggle} alternative > {paused? <PlayArrowIcon fontSize = 'large' />: <PauseIcon fontSize = 'large'/>  } </FloatingIconButton>
+        <FloatingIconButton onClick = {next} alternative ><SkipNextIcon fontSize = 'inherit' /></FloatingIconButton>
     </ContainerPlayerButtons>
     
 )

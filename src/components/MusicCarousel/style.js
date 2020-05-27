@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import React from 'react';
 import StyledContainer from '../Container/style';
+import { NavLink } from 'react-router-dom';
 
 
 const Square = styled.div`
@@ -38,8 +39,9 @@ const MusicArtist = styled.span`
     text-overflow: ellipsis;
 `
 
-const Container = styled(StyledContainer)`
+const Container = styled(NavLink)`
     margin: 5px 5px ;
+    display: block;
     width: 14ch;
     font-size: 16px;
     cursor: pointer;
@@ -49,7 +51,7 @@ const Container = styled(StyledContainer)`
 export const MusicSquare = ({music}) => {
     const img = require(`../../img/${music.imgSrc}`)
     return(
-    <Container as = 'a' href = {`/player/${music.id}`} >
+    <Container  to = {`/player/${music.id}`} >
         <Square >
             <Img src = {img}/>
         </Square>

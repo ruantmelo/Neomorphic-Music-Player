@@ -8,8 +8,12 @@ import StyledLink from '../../components/Link/style';
 
 
 
-const Login = props => {
-
+class Login  extends React.Component { 
+    constructor(props) {
+        super(props);
+    }
+    
+    render(){
     return (
         <StyledContainer padding = '0 5px'>
             <Title >React Music</Title>
@@ -17,7 +21,7 @@ const Login = props => {
             <Form>
                 <InputText label='Username' id='login-username' />
                 <InputPassword label='Password' id='login-password' />
-                <Button fontSize='18px' margin='15px auto 10px auto' width='100px' alternative={true}>Login</Button>
+                <Button as = 'a' href = {'http://localhost:8888/'} fontSize='18px' margin='15px auto 10px auto' width='100px' alternative={true}>Login</Button>
                 <Link 
                  to='/changepassword'>
                      I've forgotten my password
@@ -28,6 +32,7 @@ const Login = props => {
 
         </StyledContainer>
     )
+}
 
 }
 

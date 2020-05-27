@@ -14,6 +14,8 @@ import StyledContainer from './components/Container/style';
 import Routes from './routes';
 import styled from 'styled-components';
 
+import TokenContext from './utils/TokenContext';
+
 const Container = styled(StyledContainer)`
   position: relative;
   display: block;
@@ -48,11 +50,29 @@ class App extends React.Component {
       theme = 'light';
     }
 
+    const params = this.getHashParams();
+
     this.state = {
       theme: themes[theme],
       toggleTheme: this.toggleTheme,
-    };
+      token: params.access_token,
+    }
 
+    console.log('Token ' + this.state.token);
+    
+  }
+
+  getHashParams() {
+    var hashParams = {};
+    var e, r = /([^&;=]+)=?([^&;]*)/g,
+        q = window.location.hash.substring(1);
+    e = r.exec(q)
+
+    while (e) {
+       hashParams[e[1]] = decodeURIComponent(e[2]);
+       e = r.exec(q);
+    }
+    return hashParams;
   }
 
   componentDidUpdate() {
@@ -67,13 +87,12 @@ class App extends React.Component {
           <GlobalStyle />
 
           <ThemeProvider theme={this.state.theme} >
-
-
             <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
-            <Container >
-              <Routes />
-            </Container>
-
+            <TokenContext.Provider value = {this.state.token}>
+              <Container >
+                <Routes />
+              </Container>
+            </TokenContext.Provider>
           </ThemeProvider>
 
         </StylesProvider>
@@ -83,5 +102,7 @@ class App extends React.Component {
     );
   }
 }
+
+
 
 export default App;

@@ -3,14 +3,17 @@ import BottomNavigation from '../../components/BottomNavigation';
 import {SectionTitle, Container} from './style';
 import MusicCarousel from '../../components/MusicCarousel';
 import musics from '../../musics';
+import TokenContext from '../../utils/TokenContext';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {}   
     }
+    static contextType = TokenContext;
 
     render() {
+        console.log('Context ' + this.context)
         return (
             <Container>
                 <section>

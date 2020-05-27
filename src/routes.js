@@ -8,6 +8,7 @@ import NotFound from './pages/NotFound'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Player from './pages/Player';
+import Teste from './pages/Teste';
 
 
 const routes = [
@@ -19,8 +20,8 @@ const routes = [
   },
 
   {
-    path: "/login",
-    component: Login,
+    path: "/teste",
+    component: Teste,
     exact: true,
   },
 
