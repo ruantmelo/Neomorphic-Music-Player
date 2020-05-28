@@ -5,8 +5,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 
-const MusicCarousel = props => {
 
+const isEmpty = obj => {
+    for (let a in obj ) return false;
+    return true;
+}
+
+const MusicCarousel = ({musics}) => {
     return(
         <Slider
             arrows  = {false}
@@ -14,7 +19,8 @@ const MusicCarousel = props => {
             infinite = {false}
             slidesToShow = {2}
         >
-            {props.musics.map( (music, index) => <MusicSquare key = {index} music = {music}/> )}
+            
+            {isEmpty(musics)? <div><p>Nothing Here</p></div>:musics.map( (music, index) => <MusicSquare key = {index} music = {music}/> )}
         </Slider>
     )
 

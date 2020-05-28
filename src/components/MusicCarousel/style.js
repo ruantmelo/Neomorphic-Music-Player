@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 import React from 'react';
-import StyledContainer from '../Container/style';
-import { NavLink } from 'react-router-dom';
-
 
 const Square = styled.div`
     width: 100px;
@@ -39,7 +36,7 @@ const MusicArtist = styled.span`
     text-overflow: ellipsis;
 `
 
-const Container = styled(NavLink)`
+const Container = styled.a`
     margin: 5px 5px ;
     display: block;
     width: 14ch;
@@ -49,14 +46,17 @@ const Container = styled(NavLink)`
 `
 
 export const MusicSquare = ({music}) => {
-    const img = require(`../../img/${music.imgSrc}`)
+    //name, id, 
+
+    // console.log(music.artists)
+    const artists = music.artists.map(artist => artist.name).join(', ')
     return(
-    <Container  to = {`/player/${music.id}`} >
-        <Square >
-            <Img src = {img}/>
+    <Container  href = '#'>
+        <Square>
+            <Img src = {music.img} />
         </Square>
-        <MusicName >{music.name}</MusicName>
-        <MusicArtist >{music.artist}</MusicArtist>
+        <MusicName>{music.name}</MusicName>
+        <MusicArtist>{artists}</MusicArtist>
     </Container >  
         
     

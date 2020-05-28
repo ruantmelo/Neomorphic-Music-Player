@@ -1,11 +1,14 @@
+import SpotifyService from "./SpotifyService";
+
 export default class SpotifyPlayer{
     constructor(token){
-        this.token = token;
+        this._token = token;
+        this._spotifyService = new SpotifyService(token);
         this.player = new window.Spotify.Player({
             name: 'Reactify',
             getOAuthToken: cb => {cb(token)}
         })
-        this._init(this.player);
+        // this._init(this.player);
     }
 
     _init(player){
@@ -20,7 +23,7 @@ export default class SpotifyPlayer{
           
             // Ready
             player.addListener('ready', ({ device_id }) => {
-              console.log('Ready with Device ID', device_id);
+              this._deviceID = device_id;
             });
           
             // Not Ready
@@ -31,4 +34,5 @@ export default class SpotifyPlayer{
             // Connect to the player!
             player.connect();
     }
+
 }

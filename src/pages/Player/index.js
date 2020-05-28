@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import {Container, TopBar, MusicImg, SortBar, MusicInfo, PlayerButtons} from './style'
 import {MusicSlider} from '../../components/Slider/index';
-import musics , {allmusics} from '../../musics';
+import {allmusics} from '../../musics';
 import SpotifyPlayer from '../../utils/SpotifyPlayer';
+import TokenContext from '../../utils/TokenContext';
 
 class Player extends React.Component{
     constructor(props){
@@ -14,10 +15,12 @@ class Player extends React.Component{
             paused: true,
             currentTime: 0,
         }
-        this.token = ''
-        this.spotifyPlayer = new SpotifyPlayer(this.token); 
         this.audioRef = React.createRef();
+        this.spotifyPlayer = new SpotifyPlayer(localStorage.getItem('@music-player/spotify-token'));
     }
+
+    static contextType = TokenContext;
+    
 
     UNSAFE_componentWillMount(){
         const musicID = this.props.match.params.id;
@@ -25,12 +28,13 @@ class Player extends React.Component{
         let music; 
         
         allmusics.forEach(m => {
+            // eslint-disable-next-line 
             if (musicID == m.id) music = m;
         });
         this.setState({music});      
     }
     
-    componentDidMount(){
+    componentDidMount(){ 
         this.handleCurrent  = this.audioRef.current.ontimeupdate = (e) => this.setState({currentTime: e.target.currentTime});
     }
 
@@ -71,10 +75,13 @@ class Player extends React.Component{
         music.currentTime = value;
     }
 
+
+
     prev = () => {
         const musicID = this.state.music.id - 1;
         let music = '';
         allmusics.forEach((m) => {
+            // eslint-disable-next-line 
             if (m.id == musicID) music = m;
         })
 
@@ -88,6 +95,7 @@ class Player extends React.Component{
         let music = '';
 
         allmusics.forEach((m) => {
+            // eslint-disable-next-line 
             if (m.id == musicID) music = m;
         })
 
@@ -105,6 +113,8 @@ class Player extends React.Component{
         
         const Music =  require(`../../musics/${this.state.music.src}`);
         const music = { ...this.state.music } 
+
+        console.log(this.spotifyPlayer);
         return(
             <Container>
                 <TopBar/>

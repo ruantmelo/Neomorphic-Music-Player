@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import TimeHelper from '../../utils/TimeHelper';
 import {Container, TimeContainer , StyledSlider, TimeLabel} from './style';
 

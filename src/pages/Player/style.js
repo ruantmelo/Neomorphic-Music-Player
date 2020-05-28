@@ -4,7 +4,7 @@ import React from 'react';
 import StyledContainer from '../../components/Container/style'
 import StyledButton from '../../components/Button/style';
 
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 
 import ShuffleIcon from '@material-ui/icons/Shuffle';
 import RepeatOutlinedIcon from '@material-ui/icons/RepeatOutlined';
@@ -37,9 +37,9 @@ const FloatingIconButton = styled(StyledButton)`
 
 export const TopBar = props => (
     <ContainerTopBar>
-        <NavLink to = '/'>
+        <a href = '/'>
         <FloatingIconButton><ArrowBackIosOutlinedIcon  fontSize = 'inherit'/></FloatingIconButton>
-        </NavLink>
+        </a>
     </ContainerTopBar>
 )
 

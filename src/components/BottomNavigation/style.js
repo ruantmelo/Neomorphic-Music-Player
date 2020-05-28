@@ -104,16 +104,16 @@ export const ContainerMenu = styled(StyledContainer)`
 `
 
 
-const FloatingButton = styled(StyledButton)`
-  border-radius: 50%;
-  font-size: 28px;
-  line-height: 45px;
-  padding: 5px;
+// const FloatingButton = styled(StyledButton)`
+//   border-radius: 50%;
+//   font-size: 28px;
+//   line-height: 45px;
+//   padding: 5px;
 
-  & *{
-    display: block;
-  }
-`
+//   & *{
+//     display: block;
+//   }
+// `
 
 
 const activeClassName = 'nav-item-active'

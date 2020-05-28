@@ -50,16 +50,13 @@ class App extends React.Component {
       theme = 'light';
     }
 
-    const params = this.getHashParams();
-
     this.state = {
       theme: themes[theme],
       toggleTheme: this.toggleTheme,
-      token: params.access_token,
+      token: localStorage.getItem('@music-player/spotify-token') ,
     }
 
     console.log('Token ' + this.state.token);
-    
   }
 
   getHashParams() {
@@ -75,12 +72,19 @@ class App extends React.Component {
     return hashParams;
   }
 
+  componentDidMount(){
+    const hashToken = this.getHashParams().access_token;
+    if ( hashToken && hashToken !== this.state.token){
+      localStorage.setItem('@music-player/spotify-token', hashToken);
+      this.setState({token: hashToken})
+    }
+  }
+
   componentDidUpdate() {
     localStorage.setItem('@music-player/theme', this.state.theme.name);
   }
 
   render() {
-
     return (
       <BrowserRouter>
         <StylesProvider injectFirst>

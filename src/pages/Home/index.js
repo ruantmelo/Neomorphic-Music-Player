@@ -2,33 +2,46 @@ import React from 'react';
 import BottomNavigation from '../../components/BottomNavigation';
 import {SectionTitle, Container} from './style';
 import MusicCarousel from '../../components/MusicCarousel';
-import musics from '../../musics';
 import TokenContext from '../../utils/TokenContext';
+import SpotifyService from '../../utils/SpotifyService';
 
 class Home extends React.Component {
+
+    static contextType = TokenContext;
     constructor(props) {
         super(props);
-        this.state = {}   
+        this.state = {
+            favourites: [],
+            recent: [],
+            releases: [],
+        }   
     }
-    static contextType = TokenContext;
+    
+    async componentDidMount(){
+        this.spotifyService = new SpotifyService(this.context);
+        const favourites = await this.spotifyService.getSavedTracks();
+        const recent = await this.spotifyService.getRecentlyTracks();
+        const releases = await this.spotifyService.getNewReleases();
+        this.setState({favourites, recent, releases})
+    }
 
     render() {
-        console.log('Context ' + this.context)
+        const {favourites, recent, releases} = this.state;
         return (
             <Container>
                 <section>
-                <SectionTitle>Favourites</SectionTitle>
-                    <MusicCarousel  musics = {musics.favourites}/>
+                    <SectionTitle>Favourites</SectionTitle>
+                    <MusicCarousel  musics = {favourites}/>
                 </section>
                 
                 <section>
                     <SectionTitle>Recently Played</SectionTitle>
-                    <MusicCarousel  musics = {musics.recent}/>
+                    <MusicCarousel  musics = {recent}/>
                 </section>
                 
                 <section>
-                    <SectionTitle>Popular Hits</SectionTitle>
-                    <MusicCarousel musics = {musics.popular}/>
+                    <SectionTitle>New Releases</SectionTitle>
+                    <MusicCarousel musics = {releases}/>
                 </section>
                 <BottomNavigation/>
             </Container>
