@@ -14,33 +14,32 @@ import StyledContainer from './components/Container/style';
 import Routes from './routes';
 import styled from 'styled-components';
 
-import TokenContext from './utils/TokenContext';
-
 const Container = styled(StyledContainer)`
   position: relative;
   display: block;
-  margin: 10px auto 0 auto;
-  padding: 20px;
+  margin: 10px auto 0px auto;
+  padding: 20px 10px ;
   overflow: hidden;
   box-sizing: border-box;
-  width: 360px;
-  height: 640px;
+  max-width: 360px;
+  min-height: 500px;
+  height: calc(100vh - 50px);
 `
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-
     this.toggleTheme = () => {
-      this.setState(state => ({
-        theme:
-          state.theme === themes.dark
-            ? themes.light
-            : themes.dark,
-      }));
+      this.setState(state => {
+        const newTheme = state.theme === themes.dark 
+                            ? themes.light
+                            : themes.dark
+        localStorage.setItem('@music-player/theme', newTheme.name);
 
-    };
+        return {theme: newTheme};
+      })
+    }
 
     // Estado também contém a função de atualização
     // Passando para o provedor de contexto
@@ -53,10 +52,13 @@ class App extends React.Component {
     this.state = {
       theme: themes[theme],
       toggleTheme: this.toggleTheme,
-      token: localStorage.getItem('@music-player/spotify-token') ,
+      // token: localStorage.getItem('@music-player/spotify-token') ,
+      // refresh_token: localStorage.getItem('@music-player/spotify-refresh_token')
     }
+  }
 
-    console.log('Token ' + this.state.token);
+  componentDidMount(){
+    this.configToken();
   }
 
   getHashParams() {
@@ -71,17 +73,20 @@ class App extends React.Component {
     }
     return hashParams;
   }
-
-  componentDidMount(){
+  
+  configToken(){
     const hashToken = this.getHashParams().access_token;
+    const hashRefresh = this.getHashParams().refresh_token;
+
     if ( hashToken && hashToken !== this.state.token){
       localStorage.setItem('@music-player/spotify-token', hashToken);
       this.setState({token: hashToken})
     }
-  }
 
-  componentDidUpdate() {
-    localStorage.setItem('@music-player/theme', this.state.theme.name);
+    if(hashRefresh && hashRefresh !== this.state.refresh_token ){
+      localStorage.setItem('@music-player/spotify-refresh_token', hashRefresh);
+      this.setState({refresh_token: hashRefresh});
+    }
   }
 
   render() {
@@ -89,16 +94,14 @@ class App extends React.Component {
       <BrowserRouter>
         <StylesProvider injectFirst>
           <GlobalStyle />
-
           <ThemeProvider theme={this.state.theme} >
             <Header toggleTheme={this.state.toggleTheme} themeName={this.state.theme.name} />
-            <TokenContext.Provider value = {this.state.token}>
+            {/* <TokenContext.Provider value = {this.state.token}> */}
               <Container >
                 <Routes />
               </Container>
-            </TokenContext.Provider>
+            {/* </TokenContext.Provider> */}
           </ThemeProvider>
-
         </StylesProvider>
 
       </BrowserRouter>

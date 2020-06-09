@@ -45,6 +45,7 @@ export const TopBar = props => (
 
 const Img = styled.img`
     border-radius: 50%;
+    width: 200px;
 `
 const ContainerImg = styled(StyledContainer)`
     width: fit-content;
@@ -57,11 +58,10 @@ const ContainerImg = styled(StyledContainer)`
     box-shadow: ${({ theme }) => '4px 4px 10px -1px ' + theme.primary.dark + ' , -2px -2px 8px 4px ' + theme.primary.light};
 `
 
-export const MusicImg = props => {
-    const musicSrc = require(`../../img/${props.src}`)
+export const MusicImg = ({src}) => {
     return (
     <ContainerImg>
-        <Img src = {musicSrc} />
+        <Img src = {src} />
     </ContainerImg>
 )}
 
@@ -71,14 +71,12 @@ const ContainerSortBar = styled(StyledContainer)`
     justify-content: space-between;
 `
 
-export const SortBar = props => {
+export const SortBar = ({repeat, shuffle, toggleRepeat, toggleShuffle}) => {
     
     return(
         <ContainerSortBar>
-            <FloatingIconButton
-                alternative
-            ><ShuffleIcon fontSize = 'inherit'/></FloatingIconButton>
-            <FloatingIconButton><RepeatOutlinedIcon fontSize = 'inherit'/></FloatingIconButton>
+            <FloatingIconButton alternative = {shuffle} onClick = {toggleShuffle}><ShuffleIcon fontSize = 'inherit'/></FloatingIconButton>
+            <FloatingIconButton alternative = {repeat} onClick = {toggleRepeat}><RepeatOutlinedIcon fontSize = 'inherit'/></FloatingIconButton>
         </ContainerSortBar>
     )
 }
@@ -107,13 +105,15 @@ const MusicArtist = styled.span`
     overflow: hidden;
 `
 
-export const MusicInfo = ({name, artist}) => (
-    <ContainerMusicInfo>
-        <MusicName>{name}</MusicName>
-        <MusicArtist>{artist}</MusicArtist>
-    </ContainerMusicInfo>
-
-)
+export const MusicInfo = ({name, artists}) =>{ 
+    const artists_string = artists.map(artist => artist.name).join(', ')
+    return(
+        <ContainerMusicInfo>
+            <MusicName>{name}</MusicName>
+            <MusicArtist>{artists_string}</MusicArtist>
+        </ContainerMusicInfo>
+    )
+}
 
 const ContainerPlayerButtons = styled.div`
     display: flex;

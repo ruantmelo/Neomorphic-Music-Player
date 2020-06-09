@@ -3,12 +3,11 @@ import { Route, Switch as SwitchRouter } from "react-router-dom";
 
 
 
-// import Login from './pages/Login'
+import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Player from './pages/Player';
-import Teste from './pages/Teste';
 
 
 const routes = [
@@ -20,8 +19,8 @@ const routes = [
   },
 
   {
-    path: "/teste",
-    component: Teste,
+    path: "/login",
+    component: Login,
     exact: true,
   },
 
@@ -31,7 +30,7 @@ const routes = [
     exact: true,
   },
   {
-    path: "/player/:id",
+    path: "/player",
     component: Player,
   },
 

@@ -1,7 +1,33 @@
+import React  from 'react';
 import styled from 'styled-components';
-import StyledContainer from '../../components/Container/style';
+import MusicalCarousel from '../../components/MusicalCarousel';
 
-export const Container = styled(StyledContainer)`
+const SectionTitle = styled.h2`
+    color: ${({theme}) => theme.surface};
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px auto;
+`
+
+const Section = styled.section`
+    margin: 20px auto;
+`
+
+export const MusicalSection = ({type, title, data, queryParams}) => {
+    return(
+        <Section>
+            <SectionTitle>{title}</SectionTitle>
+            <MusicalCarousel type = {type} queryParams = {queryParams? queryParams : {}} data = {data}/>
+        </Section>
+        
+    )
+}
+
+export const Container = styled.div`
+    height: 100%;
+`
+
+export const ContainerMusics = styled.div`
     height: 85%;
     overflow-y: scroll;
     &::-webkit-scrollbar {
@@ -21,8 +47,3 @@ export const Container = styled(StyledContainer)`
     } 
 `
 
-export const SectionTitle = styled.h2`
-color: ${({theme}) => theme.surface};
-font-size: 24px;
-margin: 20px 0;
-`

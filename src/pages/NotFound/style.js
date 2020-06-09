@@ -1,4 +1,9 @@
 import styled from 'styled-components';
+import StyledContainer from '../../components/Container/style';
+
+export const Container = styled(StyledContainer)`
+    height: 100%;
+`
 
 export const Img = styled.img`
     width: 100%;

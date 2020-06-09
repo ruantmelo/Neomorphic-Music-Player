@@ -37,7 +37,7 @@ export const MusicSlider = ({currentTime, duration, changeTime}) => {
         }}
 
         onChangeCommitted={(e, val) => {
-          changeTime(TimeHelper.toCurrent(value, duration))
+          changeTime(Math.trunc(TimeHelper.toCurrent(value, duration)))
           setActive(false);
         }}
       

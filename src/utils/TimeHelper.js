@@ -1,15 +1,17 @@
 class TimeHelper {
-    static format(value = '') {
+    static format(value = '') { //Recebe o valor em ms
+        if (!value) return '00:00'; //Primeira verificação
+
         let minutes = '';
         let seconds = '';
         let time = '';
-        if (!value) return '00:00'
+
+        value = value / 1000 //Transforma em segundos
         value = Math.trunc(value);
 
-        if (value >= 60) {
-            seconds = value % 60 < 10 ? '0' + value % 60 : value % 60;
-            minutes = parseInt(value / 60) < 10 ? '0' + parseInt(value / 60) : parseInt(value / 60)
-
+        if (value >= 60) { 
+            seconds = parseInt(value % 60) < 10 ? '0' + parseInt(value % 60) : parseInt(value % 60);
+            minutes = parseInt(value / 60) < 10 ? '0' + parseInt(value / 60) : parseInt(value / 60);
         }
 
         else {
