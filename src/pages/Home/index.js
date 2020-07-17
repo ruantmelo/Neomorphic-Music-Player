@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import BottomNavigation from '../../components/BottomNavigation';
-import { Container,ContainerMusics, MusicalSection} from './style';
+import { PageContainer, NameHeader, ContainerMusics, MusicalSection} from './style';
 import SpotifyService from '../../utils/SpotifyService';
 import ErrorMessage from '../../components/ErrorMessage';
 import {LoadingCircle} from '../../components/Loading/style';
@@ -16,6 +16,7 @@ const Home = props =>  {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
     const [error, setError] = useState(null);
+
     useEffect(() => {
         async function loadData(){
             try {
@@ -26,19 +27,20 @@ const Home = props =>  {
                         SpotifyService.getFeaturedPlaylists(),
                     ])
                 setData({favourites: dt[0], topArtists: dt[1], featured: dt[2]});
-            } catch (error) {
-                setError(error)
+            } catch (err) {
+                setError(err)
             }
             setLoading(false)   
         }
         if (isEmpty(data)){
             loadData();
+            window.document.title = 'Reactify | Home'
         }
     
     }, [data])
 
     return(
-            <Container>
+            <PageContainer>
                 {loading? <LoadingCircle/> : (error? <ErrorMessage error = {error}/>:
                 <>
                 <ContainerMusics>
@@ -52,7 +54,7 @@ const Home = props =>  {
                 ) 
                 }
             
-            </Container>    
+            </PageContainer>    
         )
 }
 

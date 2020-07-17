@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 // eslint-disable-next-line
 import React from 'react';
+import {StyledPageContainer} from '../../components/Container/style';
 import StyledContainer from '../../components/Container/style'
 import StyledButton from '../../components/Button/style';
 
-// import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 import ShuffleIcon from '@material-ui/icons/Shuffle';
 import RepeatOutlinedIcon from '@material-ui/icons/RepeatOutlined';
@@ -15,13 +16,15 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
-export const Container = styled(StyledContainer)`
+export const PageContainer = styled(StyledPageContainer)`
+    display: block;
     height: 100%;
-    width: 100%;
+    padding: 0px 15px;
 `
 
 const ContainerTopBar = styled.div`
-    
+    display: flex;
+    align-items: center;
 `
 
 const FloatingIconButton = styled(StyledButton)`
@@ -35,11 +38,30 @@ const FloatingIconButton = styled(StyledButton)`
   }
 `
 
-export const TopBar = props => (
+const Context = styled.div`
+    color: ${({theme}) => theme.surface};
+    font-size: 14px;
+    line-height: calc(14px * 1.5);
+    margin-left: 75px;
+
+    & span{
+        display: block;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+    }
+`
+
+export const TopBar = ({context}) => (
     <ContainerTopBar>
-        <a href = '/'>
+        <NavLink to = '/'>
         <FloatingIconButton><ArrowBackIosOutlinedIcon  fontSize = 'inherit'/></FloatingIconButton>
-        </a>
+        </NavLink>
+
+    <Context>Playing from playlist<br/> 
+        <span>{context}</span>
+    </Context>
+    <span></span>
     </ContainerTopBar>
 )
 
@@ -51,7 +73,7 @@ const ContainerImg = styled(StyledContainer)`
     width: fit-content;
     display: flex;
     align-items: center;
-    margin: 20px auto 15px  auto;
+    margin: 30px auto 15px  auto;
     overflow: visible;
     border-radius: 50%;
     padding: 5px;
@@ -117,9 +139,10 @@ export const MusicInfo = ({name, artists}) =>{
 
 const ContainerPlayerButtons = styled.div`
     display: flex;
+    width: 300px;
     align-items: center;
     justify-content: space-between;
-    margin: 15px 35px;
+    margin: 15px auto ;
 
     & button{
         font-size: 32px;
@@ -130,12 +153,12 @@ const ContainerPlayerButtons = styled.div`
     }
 `
 
-export const PlayerButtons = ({paused, toggle, next, prev}) => (
+export const PlayerButtons = ({paused, togglePlay, next, prev}) => (
 
 
     <ContainerPlayerButtons>
         <FloatingIconButton onClick = {prev} alternative ><SkipPreviousIcon fontSize = 'inherit' /></FloatingIconButton>
-        <FloatingIconButton onClick = {toggle} alternative > {paused? <PlayArrowIcon fontSize = 'large' />: <PauseIcon fontSize = 'large'/>  } </FloatingIconButton>
+        <FloatingIconButton onClick = {togglePlay} alternative > {paused? <PlayArrowIcon fontSize = 'large' />: <PauseIcon fontSize = 'large'/>  } </FloatingIconButton>
         <FloatingIconButton onClick = {next} alternative ><SkipNextIcon fontSize = 'inherit' /></FloatingIconButton>
     </ContainerPlayerButtons>
     

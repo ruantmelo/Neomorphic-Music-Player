@@ -1,17 +1,21 @@
-import Music from '../models/Music';
-import Artist from '../models/Artist';
-import Playlist from '../models/Playlist';
 import SpotifyAPIException from './SpotifyAPIException';
-import { duration } from '@material-ui/core';
+import SpotifyConverter from './SpotifyConverter';
 //MELHORAR O METODO DE PEGAR AS IMAGENS (NAO ACESSANDO DIRETAMENTE O ITEM DO ARRAY)
 //Criar metodo para criar a string de queryParams 
 
-function handleErrors(response) {
-    if (response.error) {
-        throw new SpotifyAPIException(response.error);
+async function handleErrors(response) {
+    if (!response.ok) {
+        let badResponse = await response.json();
+        throw new SpotifyAPIException(badResponse.error);
     }
+
+    if(response.status !== 204){
+        
+        return response.json();
+    }
+
     return response;
-}
+  }
 
 export default class SpotifyService{
 
@@ -21,7 +25,7 @@ export default class SpotifyService{
 
     static async getNewReleases(){  //TROCAR PARA FEATURED PLAYLISTS?
         const url = 'https://api.spotify.com/v1/browse/new-releases'
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
 
         const headers = new Headers({
             "Content-Type": 'application/json',
@@ -35,28 +39,16 @@ export default class SpotifyService{
 
 
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 .then(response => response.albums.items)
                 .then(albums => albums.filter((album => album.album_type === 'single')))
-                .then(recentTracks => recentTracks.map(track => new Music(
-                    {
-                        img: track.images[1].url,
-                        name: track.name,
-                        artists: track.artists,
-                        id: track.id,
-                        spotify_uri: track.uri,
-                        track_number: track.track_number,
-                        duration: track.duration_ms,
-                    }) 
-                    )
-                )
+                .then(recentTracks => recentTracks.map(track => SpotifyConverter.music(track)))
                 // .then(response => response.items) //API retorna no máximo 20 músicas por padrão.
     }
 
     static async getRecentlyTracks(){
         const url = 'https://api.spotify.com/v1/me/player/recently-played?market=BR';
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
         const headers = new Headers({
             "Content-Type": 'application/json',
             "Authorization": `Bearer ${token}`
@@ -69,37 +61,28 @@ export default class SpotifyService{
         }
     
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 .then(response => response.items)
-                .then(recentTracks => recentTracks.map(({track}) => new Music(
-                    {
-                        img: track.album.images[1].url,
-                        name: track.name,
-                        artists: track.artists,
-                        id: track.id,
-                        spotify_uri: track.uri,
-                        track_number: track.track_number,
-                        duration: track.duration_ms,
-                    })
-                    )
-                )
+                .then(recentTracks => recentTracks.map(({track}) => SpotifyConverter.music(track)))
     }
 
     static async refreshToken(){
-        const rt = localStorage.getItem('@music-player/spotify-refresh_token');
-        const url = 'http://localhost:8888/refresh_token?refresh_token=' + rt;
+        const rt = localStorage.getItem('@reactify-rm/spotify-refresh_token');
+        const url = `http://localhost:8888/refresh_token?refresh_token=${rt}`;
 
-        await fetch( url, {method: 'GET' ,mode: 'cors'})
-                .then(response => response.json())
+        const config = {
+            method: 'GET',
+        }
+
+        return fetch(url, config)
                 .then(handleErrors)
-                .then(newRt => localStorage.setItem('@music-player/spotify-token', newRt))
+                .then(({access_token}) => localStorage.setItem('@reactify-rm/spotify-token', access_token))
         
     }
 
     static async getSavedTracks(offset = 0){
         const url = `https://api.spotify.com/v1/me/tracks?market=BR&offset=${offset}`;
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
 
         const headers = new Headers({
         "Content-Type": 'application/json',
@@ -114,28 +97,16 @@ export default class SpotifyService{
 
 
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 .then(response => response.items)
-                .then(savedTracks => savedTracks.map(({track}) => new Music(
-                    {
-                        img: track.album.images[1].url,
-                        name: track.name,
-                        artists: track.artists,
-                        id: track.id,
-                        spotify_uri: track.uri,
-                        track_number: track.track_number,
-                        duration: track.duration_ms,
-                    })
-                    )
-                )
+                .then(savedTracks => savedTracks.map(({track}) => SpotifyConverter.music(track)))
 
         }
 
     
     static async getTrack(id){
         const url = `https://api.spotify.com/v1/tracks/${id}`
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
 
         const headers = new Headers({
         "Content-Type": 'application/json',
@@ -150,21 +121,8 @@ export default class SpotifyService{
 
 
         return fetch(url, config)
-                .then(response => response.json()) 
                 .then(handleErrors)
-                .then(track => new Music(
-                    {
-                        id: track.id,
-                        img: track.album.images[1].url,
-                        name: track.name,
-                        artists: track.artists,
-                        spotify_uri: track.uri,
-                        album_uri: track.album.uri,
-                        track_number: track.track_number,
-                        duration: track.duration_ms,
-                    }
-                    )
-                )
+                .then(track => SpotifyConverter.music(track))
     }
 
     static async getFeaturedPlaylists(){
@@ -173,7 +131,7 @@ export default class SpotifyService{
         const timestamp = new Date().toISOString();
         const url = `https://api.spotify.com/v1/browse/featured-playlists?timestamp=${timestamp}&country=${country}`
         
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
 
         const headers = new Headers({
             "Content-Type": 'application/json',
@@ -187,23 +145,13 @@ export default class SpotifyService{
         }
     
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 // .then(response => console.log(response))
                 .then(featured => (
-                        {
-                            message: featured.message , 
-                            playlists: featured.playlists.items.map((playlist) => 
-                                new Playlist({
-                                    img: playlist.images[0].url, 
-                                    name: playlist.name, 
-                                    owner: playlist.owner,  
-                                    id: playlist.id, 
-                                    spotify_uri: playlist.uri, 
-                                    description: playlist.description,
-                                    }) 
-
-                        )
+                    {
+                        message: featured.message , 
+                        playlists: featured.playlists.items.map(playlist => SpotifyConverter.playlist(playlist))
+                    
                     })
                 )
 
@@ -211,7 +159,7 @@ export default class SpotifyService{
 
     static async getRecommendations(){
         const url = `https://api.spotify.com/v1/recommendations`;
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
         const headers = new Headers({
         "Content-Type": 'application/json',
         "Authorization": `Bearer ${token}`
@@ -224,7 +172,6 @@ export default class SpotifyService{
         }
 
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 .then(response => response.items)
     }
@@ -232,7 +179,7 @@ export default class SpotifyService{
     static async getUserTopArtists(){
         const url = 'https://api.spotify.com/v1/me/top/artists';
 
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
         const headers = new Headers({
         "Content-Type": 'application/json',
         "Authorization": `Bearer ${token}`
@@ -245,16 +192,9 @@ export default class SpotifyService{
         }
 
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
                 .then(response => response.items)
-                .then(artists => artists.map(artist => new Artist({
-                    id: artist.id,
-                    name: artist.name,
-                    img: artist.images[1].url,
-                    genres: artist.genres,
-                    spotify_uri: artist.uri,
-                }) ))
+                .then(artists => artists.map(artist => SpotifyConverter.artist(artist)))
                 // .then(response => console.log(response))
                 // .then(topArtists => topArtists.map(({track}) => new Music(
                 //     {
@@ -272,7 +212,7 @@ export default class SpotifyService{
     static async getUserInformation(){
         const url = `https://api.spotify.com/v1/me`
 
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
         const headers = new Headers({
         "Content-Type": 'application/json',
         "Authorization": `Bearer ${token}`
@@ -285,7 +225,36 @@ export default class SpotifyService{
         }
 
         return fetch(url, config)
-                .then(response => response.json())
                 .then(handleErrors)
+    }
+
+    static async search(keywords = ''){
+        keywords = keywords.replace(/\s+/g, '+');
+        const url = `https://api.spotify.com/v1/search?q=${keywords}&type=album,artist,playlist,track`
+
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
+        const headers = new Headers({
+        "Content-Type": 'application/json',
+        "Authorization": `Bearer ${token}`
+        });
+
+        const config = {
+            method: 'GET',
+            headers,
+            mode: 'cors',
+        }
+
+        return fetch(url, config)
+                .then(handleErrors)
+                .then(response => response)
+                .then(response => (
+                    {
+                        albums: response.albums.items.map(album => SpotifyConverter.album(album)),
+                        artists: response.artists.items.map(artist => SpotifyConverter.artist(artist)),
+                        musics: response.tracks.items.map(music => SpotifyConverter.music(music)),
+                        playlists: response.playlists.items.map(playlist => SpotifyConverter.playlist(playlist)),
+                    })
+                )
+                .then(data => data)
     }
 }

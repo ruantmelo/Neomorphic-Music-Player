@@ -3,6 +3,7 @@ import queryString from 'querystring';
 import SpotifyService from './SpotifyService';
 import Music from '../models/Music';
 import SpotifyAPIException from './SpotifyAPIException';
+import { throws } from 'assert';
 
 //FIXME: SO TRABALHA COM 20 MUSICAS POR PLAYLIST;
 const isEmpty = obj => {
@@ -10,10 +11,16 @@ const isEmpty = obj => {
   return true;
 }
 
-function handleErrors(response) { //ADAPTAR PARA METODOS QUE NAO RETORNAM
-  if (response.error) {
-      throw new SpotifyAPIException(response.error);
+async function handleErrors(response) {
+  if (!response.ok) {
+      let badResponse = await response.json();
+      throw new SpotifyAPIException(badResponse.error);
   }
+
+  if(response.status !== 204){
+    return response.json();
+  }
+
   return response;
 }
 
@@ -25,49 +32,43 @@ export class SpotifyPlayer{
         if (enforce !== _singletonEnforcer) {
           throw('Cannot constructor singleton')
         }
-        const token = localStorage.getItem('@music-player/spotify-token');
+        const token = localStorage.getItem('@reactify-rm/spotify-token');
+
         return new Promise((resolve, reject) => {
           this.player = new window.Spotify.Player({
             name: 'Reactify',
             getOAuthToken: cb => {cb(token)}
+          })
+          this._init().then( () => resolve(this) ).catch(err => reject(err))
+          // Connect to the player!
+          this.player.connect();
         })
-          this._init();
-          this.player.addListener('ready', ({ device_id }) => {
-            console.log('Connected with Device ID', device_id);
-            this.device_id = device_id;
-            resolve(this)
-        });
-          this.player.addListener('initialization_error', ({ message }) => { console.error(message); reject(message)});
-        })
-
         
     }
 
     _init(){
-            // Error handling
-            let player = this.player;
-            player.addListener('initialization_error', ({ message }) => { console.error(message); });
-            player.addListener('authentication_error', ({ message }) => { console.error(message); });
-            player.addListener('account_error', ({ message }) => { console.error(message); });
-            player.addListener('playback_error', ({ message }) => { console.error(message); });
+      return new Promise((resolve, reject) => {
+        this.player.addListener('authentication_error', ({ message }) => { reject(new SpotifyAPIException({status: 'Ops :P', message,}))});
+        
+        this.player.addListener('account_error', ({ message }) => { reject(new SpotifyAPIException({status: ' :P', message,})) });
+        this.player.addListener('playback_error', ({ message }) => { reject(new SpotifyAPIException({status: 'Ops :P', message,})) });
+        
+        this.player.addListener('ready', ({ device_id }) => {
+          console.log('Connected with Device ID', device_id);
+          this.device_id = device_id;
+          resolve(this)
+        })
+            // // Not Ready
+            // player.addListener('not_ready', ({ device_id }) => {
+            //   console.log('Device ID has gone offline', device_id);
+            // });
           
-            // Playback status updates
-            // player.addListener('player_state_changed', state => { console.log(state); });
-          
-
-            // Not Ready
-            player.addListener('not_ready', ({ device_id }) => {
-              console.log('Device ID has gone offline', device_id);
-            });
-            
-
-            // Connect to the player!
-            player.connect();
+     })
     }
 
     static getInstance() {
       if(!_instance) {
-        _instance = new SpotifyPlayer(_singletonEnforcer);
+        _instance =  new SpotifyPlayer(_singletonEnforcer);
       }
       return _instance;
     }
@@ -75,7 +76,7 @@ export class SpotifyPlayer{
     async setRepeatMode(state = 'track'){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/repeat?state=${state}&device_id=${device_id}`
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
 
       const headers = new Headers({
           "Content-Type": 'application/json',
@@ -95,7 +96,7 @@ export class SpotifyPlayer{
     async setShuffle(state = 'true'){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/shuffle?state=${state}&device_id=${device_id}`
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
 
       const headers = new Headers({
           "Content-Type": 'application/json',
@@ -108,55 +109,59 @@ export class SpotifyPlayer{
           mode: 'cors',
       }
 
-      return fetch(url, config)
+      return fetch(url, config).then(response => console.log(response))
 
     }
 
-    async play(){
+    async togglePlay(){
 
-      const device_id = this.device_id;
-      const url = `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      return this.player.togglePlay()
+      // const device_id = this.device_id;
+      // const url = `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`;
+      // const token = localStorage.getItem('@reactify-rm/spotify-token');
 
-        const headers = new Headers({
-            "Content-Type": 'application/json',
-            "Authorization": `Bearer ${token}`
-            });
+      //   const headers = new Headers({
+      //       "Content-Type": 'application/json',
+      //       "Authorization": `Bearer ${token}`
+      //       });
 
-        const config = {
-            method: 'PUT',
-            headers,
-            mode: 'cors',
-        }
+      //   const config = {
+      //       method: 'PUT',
+      //       headers,
+      //       mode: 'cors',
+      //   }
 
-        return fetch(url, config)
+      //   return fetch(url, config)
         // Only one of either context_uri or uris can be specified. If neither is present, calling /play will resume playback. If both are present the request will return 400 BAD REQUEST. If context_uri is a Playlist or Album, or when uris is provided, then offset can be added to specify 
         // starting track in the context. If the provided context_uri corresponds to an album or playlist object, an offset can be specified either by track uri OR position. If both are present the request will return 400 BAD REQUEST. If incorrect values are provided for position or uri, the request may be accepted but with an unpredictable resulting action on playback.
     }
 
     async pause(){
-      const device_id = this.device_id;
-      const url = `https://api.spotify.com/v1/me/player/pause?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
 
-        const headers = new Headers({
-            "Content-Type": 'application/json',
-            "Authorization": `Bearer ${token}`
-            });
+      this.player.togglePlay().then(() => {
+      });
+      // const device_id = this.device_id;
+      // const url = `https://api.spotify.com/v1/me/player/pause?device_id=${device_id}`;
+      // const token = localStorage.getItem('@reactify-rm/spotify-token');
 
-        const config = {
-            method: 'PUT',
-            headers,
-            mode: 'cors',
-        }
+      //   const headers = new Headers({
+      //       "Content-Type": 'application/json',
+      //       "Authorization": `Bearer ${token}`
+      //       });
 
-        return fetch(url, config)
+      //   const config = {
+      //       method: 'PUT',
+      //       headers,
+      //       mode: 'cors',
+      //   }
+
+      //   return fetch(url, config)
     }
 
     async playFromSavedTracks(id = ''){ //VERIFICAR SE O OFFSET ESTÁ FUNCIONANDO, JA QUE A REQUISICAO FUNFA MESMO COM VALOR INCORRETO
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
       const uris = await this._getSavedTracksURIs();
       const headers = new Headers({
             "Content-Type": 'application/json',
@@ -178,7 +183,7 @@ export class SpotifyPlayer{
     async playFrom(context_uri = '', position = 0 ){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
       const headers = new Headers({
             "Content-Type": 'application/json',
             "Authorization": `Bearer ${token}`
@@ -200,7 +205,7 @@ export class SpotifyPlayer{
     async playSong(id){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/play?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
       const music = await SpotifyService.getTrack(id);
       const headers = new Headers({
             "Content-Type": 'application/json',
@@ -226,7 +231,7 @@ export class SpotifyPlayer{
 
     async getCurrentInformation(){
       const url = `https://api.spotify.com/v1/me/player`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
 
       const headers = new Headers({
       "Content-Type": 'application/json',
@@ -261,7 +266,7 @@ export class SpotifyPlayer{
     async seekToPosition(value){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/seek?position_ms=${value}&device_id=${device_id}`
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
       
       const headers = new Headers({
             "Content-Type": 'application/json',
@@ -281,7 +286,7 @@ export class SpotifyPlayer{
     async SkipToNext(){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/next?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
 
       const headers = new Headers({
       "Content-Type": 'application/json',
@@ -299,7 +304,7 @@ export class SpotifyPlayer{
     async SkipToPrevious(){
       const device_id = this.device_id;
       const url = `https://api.spotify.com/v1/me/player/previous?device_id=${device_id}`;
-      const token = localStorage.getItem('@music-player/spotify-token');
+      const token = localStorage.getItem('@reactify-rm/spotify-token');
 
       const headers = new Headers({
       "Content-Type": 'application/json',

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
-import {Container, TopBar, MusicImg, SortBar, MusicInfo, PlayerButtons} from './style'
+import {PageContainer, TopBar, MusicImg, SortBar, MusicInfo, PlayerButtons} from './style'
 import {MusicSlider} from '../../components/Slider/index';
 import {SpotifyPlayer} from '../../utils/SpotifyPlayer';
 import ErrorMessage from '../../components/ErrorMessage';
 import {LoadingCircle} from '../../components/Loading/style'
 import SpotifyService from '../../utils/SpotifyService';
+import SpotifyAPIException from '../../utils/SpotifyAPIException';
 // import TokenContext from '../../utils/TokenContext';
-  
 
 class Player extends React.Component{
     constructor(props){
@@ -18,6 +18,7 @@ class Player extends React.Component{
             shuffle: false,
             repeat: false,
             paused: true,
+            context: '',
             currentTime: 0,
         }
         this.isChangingTime = false;
@@ -27,6 +28,7 @@ class Player extends React.Component{
     }
 
     async componentDidMount(){
+        window.document.title = 'Reactify | Player'
         const queryParams = new URLSearchParams(window.location.search);
         const paramContext = queryParams.get('context');
         const paramPosition = queryParams.get('position');
@@ -37,21 +39,33 @@ class Player extends React.Component{
             this.spotifyPlayer = await SpotifyPlayer.getInstance();
             this.spotifyPlayer.player.addListener('player_state_changed', async (playerState)=> { 
 
-                if (!playerState) return console.error('User is not playing music through the Web Playback SDK');
+                if (!playerState) {
+                    if (!this.state.error){
+                        this.setState({error: new SpotifyAPIException({
+                            status: 'Disconnected',
+                            message: 'User is not playing music through the Reactify',
+                        }) });
+                    }
+                    return console.error('User is not playing music through the Reactify')
+                };
+
                 console.log('state player' , playerState)
                 let newState = {};
 
-                //Setando o Shuffle do State
-                    if (playerState.shuffle){ 
-                        if (!this.state.shuffle){
-                            newState.shuffle = true;
-                        }
-                    }else{
-                        if (this.state.shuffle){
-                            newState.shuffle = false;
+                //Setando o Context do State
+                    if (playerState.context.uri !== this.state.context){
+                        if(playerState.context.uri){
+                            newState.context = playerState.context.metadata.context_description
+                        }else{
+                            newState.context = 'Favourites'
                         }
                     }
 
+                //Setando o Shuffle do State
+                    if (playerState.shuffle !== this.state.shuffle) {
+                        newState.shuffle = playerState.shuffle
+                    }
+                
 
                 //Setando o Repeat do State
                     if (playerState.repeat_mode !== 2){
@@ -62,38 +76,36 @@ class Player extends React.Component{
                         newState.repeat = true;
                     }
 
-                    if (playerState.paused !== this.state.paused) {
-                        newState.paused = playerState.paused
+                //Setando o Paused do State    
 
-                       
-                    };
-
-                    if (playerState.paused === true){
-                        clearInterval(this.currentUpdater)
-                        this.currentUpdater = ''
-                    } else{
-                        if (this.currentUpdater === '') {
-                            this.currentUpdater = setInterval(() => {
-                            this.setState(state => ({currentTime: state.currentTime +  1000}))
-                        }, 1000)}
+                    if(playerState.paused !== this.state.paused){
+                        if (playerState.paused === true){
+                            clearInterval(this.currentUpdater)
+                            newState.paused = true;
+                            this.currentUpdater = null;
+                        } else{
+                            newState.paused = false;
+                            if (this.currentUpdater === null) {
+                                this.currentUpdater = setInterval(() => {
+                                this.setState(state => ({currentTime: state.currentTime +  1000}))
+                            }, 1000)}
+                        }
                     }
-              
+
                 //Vendo se a música foi alterada
                     const currentURI = playerState.track_window.current_track.uri;
                     if (this.state.music.spotify_uri !== currentURI){
-                        //CRIAR METODO PARA TRANSFORMAR UM TRACK OBJECT EM UM OBJETO MUSIC DO JEITO QUE EU QUERO?
                         const music = await SpotifyService.getTrack(playerState.track_window.current_track.id)
                         newState.music = {...music}      
                     }
 
-                if (this.state.loading) newState.loading = false
-
+                if (this.state.loading) newState.loading = false;
+                if (this.state.error) newState.error = null;
                 newState.currentTime = playerState.position
 
                 this.setState(newState);
             });
             
-
             if (paramContext){
                 //Ira tocar músicas com um contexto especifico
                 if (paramContext === 'favourites'){ //Irá tocar as musicas salvas 
@@ -110,21 +122,15 @@ class Player extends React.Component{
             }
         
         }catch(err){
-            console.log(err);
-        }
-        finally{
-            this.currentUpdater = setInterval(() => {
-                this.setState(state => ({currentTime: state.currentTime +  1000}))
-            }, 1000)
+            this.setState({loading: false , error: err})
         }
 
-        
     }
 
     //IMPLEMENTAR O COMPONENT SHOULDUPDATE
 
 
-    repeat = async () => {
+    toggleRepeat = async () => {
         if (this.state.repeat){
             await this.spotifyPlayer.setRepeatMode('off');
         }else{
@@ -133,7 +139,7 @@ class Player extends React.Component{
 
     }
 
-    shuffle = async () => {
+    toggleShuffle = async () => {
         if (this.state.shuffle){
             await this.spotifyPlayer.setShuffle('false');
         }else{
@@ -141,28 +147,21 @@ class Player extends React.Component{
         }
     }
 
-    toggle = async (option = '') => {
+    togglePlay = async () => { //Metodo togglePlay é do proprio player, a rapidez dele nao faz  tao necessário setar o state por aq.
+        // const newPaused = this.state.paused? true: false
+        // if (newPaused){
+        //     clearInterval(this.currentUpdater);
+        //     this.currentUpdater = '';
 
-        switch (option) {
-            case 'pause':
-                await this.spotifyPlayer.pause();
-                break;
-
-            case 'play':
-                await this.spotifyPlayer.play();
-                this.setState({paused: false})
-                break;
-
-            default:
-                if (this.state.paused){
-                    await this.spotifyPlayer.play();
-                    this.setState({paused: false})
-                }else{
-                    this.spotifyPlayer.pause();
-                    this.setState({paused: true})
-                }
-        }
-
+        // }else{
+        //     if(!this.currentUpdater){
+        //         this.currentUpdater = setInterval(() => {
+        //             this.setState(state => ({currentTime: state.currentTime +  1000}))
+        //         }, 1000)
+        //     }
+        // }
+        // this.setState({paused: newPaused})
+        this.spotifyPlayer.togglePlay();
     }
 
     changeTime = async (value) => {
@@ -182,20 +181,20 @@ class Player extends React.Component{
     render(){
         const music = this.state.music
         return(
-            <Container>
+            <PageContainer>
                 {this.state.loading? <LoadingCircle/> : (this.state.error? <ErrorMessage error = {this.state.error}/>:
                 <>
-                <TopBar />
+                <TopBar context = {this.state.context} />
                 <MusicImg src = {music.img}/>
-                <SortBar repeat = {this.state.repeat} shuffle = {this.state.shuffle} toggleRepeat = {this.repeat} toggleShuffle = {this.shuffle} />
+                <SortBar repeat = {this.state.repeat} shuffle = {this.state.shuffle} toggleRepeat = {this.toggleRepeat} toggleShuffle = {this.toggleShuffle} />
                 <MusicInfo  name = {music.name} artists = {music.artists}/>
                 {/* Mudar o nome para MusicProgress? */}
                 <MusicSlider changeTime = {this.changeTime} duration = {music.duration} currentTime = {this.state.currentTime}/>
-                <PlayerButtons prev = {this.prev} next = {this.next} paused ={this.state.paused }toggle = {this.toggle}/>
+                <PlayerButtons prev = {this.prev} next = {this.next} paused ={this.state.paused }togglePlay = {this.togglePlay}/>
                 </>
                 )
             }
-            </Container>
+            </PageContainer>
             
             // <Container>
             //     <TopBar/>

@@ -12,15 +12,21 @@ export const StyledSlider = styled(props => (
     width: 100%;
     & .music-track{
         background: ${({theme}) => theme.alternative.main};
+        height: 4px;
         opacity: 1;
     }
 
     & .music-thumb{
         background: ${({theme}) => theme.alternative.main};
+        height: 15px;
+        width: 15px;
+        margin-left: -7.5px;
+        margin-top: -6px;
     }
 
     & .music-rail{
         background: ${({theme}) => theme.alternative.main};
+        height: 4px;
     }
 
 `

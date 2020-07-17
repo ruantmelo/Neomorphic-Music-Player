@@ -11,7 +11,9 @@ const isEmpty = obj => {
 }
 
 const MusicalCarousel = ({type, data, queryParams}) => {
-    console.log('data', data)
+
+    console.log(data);
+
     return(
         <Slider
             arrows  = {false}
@@ -20,7 +22,7 @@ const MusicalCarousel = ({type, data, queryParams}) => {
             slidesToShow = {2.2}
         >
             
-            {isEmpty(data)? <NothingHere/>:data.map( (dt, index) => <MusicalSquare type = {type} queryParams = {queryParams} key = {index} data = {dt}/> )}
+            {isEmpty(data)? <NothingHere/>:data.map( (dt, index) => <MusicalSquare type = {type} queryParams = {queryParams? queryParams : {}} key = {index} data = {dt}/> )}
         </Slider>
     )
 

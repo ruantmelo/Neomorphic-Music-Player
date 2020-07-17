@@ -5,7 +5,21 @@ import HappyMusic from '../../img/undraw_happy_music_g6wc.svg';
 import { InputPassword, InputText } from '../../components/Input/index.js';
 import {Container, Link, Form, Title, SpanSignUp, MadeBy,GitHubLink , LoginButton, Img } from './style';
 import StyledLink from '../../components/Link/style';
+import SpotifyService from '../../utils/SpotifyService';
 
+
+const refreshToken = async () => {
+    const rt =  localStorage.getItem('@reactify-rm/spotify-refresh_token');
+
+    if (rt){
+        await SpotifyService.refreshToken();
+        window.location.href = "/" ;
+
+    } else{
+        window.location.href = "http://localhost:8888/login";
+    }
+
+}
 
 
 const Login  = props => { 
@@ -14,7 +28,7 @@ const Login  = props => {
         <Container padding = '0 5px'>
             <Title >Reactify</Title>
             <Img src = {HappyMusic} alt = 'Imagem de animal fofo escutando música' />
-            <LoginButton as = 'a' href = 'http://localhost:8888/'>Login</LoginButton>
+            <LoginButton  onClick = {refreshToken} >Login</LoginButton>
             {/* <Form>
                 <InputText label='Username' id='login-username' />
                 <InputPassword label='Password' id='login-password' />

@@ -18,9 +18,9 @@ const Container = styled(StyledContainer)`
   position: relative;
   display: block;
   margin: 10px auto 0px auto;
-  padding: 20px 10px ;
-  overflow: hidden;
+  padding: 10px 5px;
   box-sizing: border-box;
+  overflow: hidden;
   max-width: 360px;
   min-height: 500px;
   height: calc(100vh - 50px);
@@ -35,7 +35,7 @@ class App extends React.Component {
         const newTheme = state.theme === themes.dark 
                             ? themes.light
                             : themes.dark
-        localStorage.setItem('@music-player/theme', newTheme.name);
+        localStorage.setItem('@reactify-rm/theme', newTheme.name);
 
         return {theme: newTheme};
       })
@@ -43,22 +43,20 @@ class App extends React.Component {
 
     // Estado também contém a função de atualização
     // Passando para o provedor de contexto
-    let theme = localStorage.getItem('@music-player/theme')
+    let theme = localStorage.getItem('@reactify-rm/theme')
     if (!theme) {
-      localStorage.setItem('@music-player/theme', 'light')
+      localStorage.setItem('@reactify-rm/theme', 'light')
       theme = 'light';
     }
 
     this.state = {
       theme: themes[theme],
       toggleTheme: this.toggleTheme,
-      // token: localStorage.getItem('@music-player/spotify-token') ,
-      // refresh_token: localStorage.getItem('@music-player/spotify-refresh_token')
     }
   }
 
   componentDidMount(){
-    this.configToken();
+    this._configToken();
   }
 
   getHashParams() {
@@ -74,17 +72,17 @@ class App extends React.Component {
     return hashParams;
   }
   
-  configToken(){
+  _configToken(){
     const hashToken = this.getHashParams().access_token;
     const hashRefresh = this.getHashParams().refresh_token;
 
     if ( hashToken && hashToken !== this.state.token){
-      localStorage.setItem('@music-player/spotify-token', hashToken);
+      localStorage.setItem('@reactify-rm/spotify-token', hashToken);
       this.setState({token: hashToken})
     }
 
     if(hashRefresh && hashRefresh !== this.state.refresh_token ){
-      localStorage.setItem('@music-player/spotify-refresh_token', hashRefresh);
+      localStorage.setItem('@reactify-rm/spotify-refresh_token', hashRefresh);
       this.setState({refresh_token: hashRefresh});
     }
   }

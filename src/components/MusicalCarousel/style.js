@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+
 
 const Square = styled.div`
     width: 100px;
@@ -11,6 +13,7 @@ const Square = styled.div`
 
 const Img = styled.img`
     width: 100%;
+    height: 100px;
 `
 const Name = styled.span`
     display: block;
@@ -37,7 +40,7 @@ const Info = styled.span`
     text-overflow: ellipsis;
 `
 
-const Container = styled.a`
+const Container = styled(NavLink)`
     margin: 5px 5px ;
     display: block;
     width: 14ch;
@@ -76,6 +79,14 @@ export const MusicalSquare = ({type, data, queryParams}) => {
             }
             break;
         }
+
+        case 'album': {
+            if (queryParams){
+                params += queryParams.context?  `context=${queryParams.context}` : `context=${data.spotify_uri}`
+                params += `&id=${data.id}`
+                info = data.artists.map(artist => artist.name).join(', ')
+            }
+        }
     }
     // const artists = data.artists.map(artist => artist.name).join(', ')
 
@@ -92,7 +103,7 @@ export const MusicalSquare = ({type, data, queryParams}) => {
     
     /* href = {`/player/${params}`} */
     return(
-    <Container href = {`/player${params}`}> 
+    <Container to = {`/player${params}`}> 
         <Square>
             <Img src = {data.img} />
         </Square>

@@ -12,6 +12,25 @@ import SearchIcon from '@material-ui/icons/Search';
 import LibraryMusicOutlinedIcon from '@material-ui/icons/LibraryMusicOutlined';
 // import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 
+const activeClassName = 'nav-item-active'
+
+const matchRoute = (path) => {
+  const {pathname} = window.location;
+  
+  const reg = new RegExp(`^${path}\/?$`)
+  return reg.exec(pathname) ? true: false;
+
+} 
+
+const StyledNavLink = styled(NavLink).attrs({ activeClassName })`
+  color: ${ ({ theme }) => theme.surface};
+ 
+  
+  &.${ activeClassName} {
+  color: ${ ({ theme }) => theme.alternative.main};
+}
+`
+
 
 export const Container = styled(StyledContainer)`
   width: 100%;
@@ -22,7 +41,7 @@ export const Container = styled(StyledContainer)`
   left: 0;
   bottom: 0;
   background: ${({theme}) => theme.primary.main};
-  box-shadow: 4px 5px 10px 5px ${({theme}) => theme.primary.light} ;
+  box-shadow: 0px -3px 5px 0px  ${({theme}) => theme.primary.dark} ;
 `
 
 
@@ -57,7 +76,7 @@ const ButtonNav = styled(StyledButton)`
 export const NavMenu = props => (
     <ContainerMenu >
       <ContainerBtnNav>
-      <StyledNavLink to='/'>
+      <StyledNavLink isActive = {() => matchRoute('\/')} to='/'>
         <ButtonNav >
         <HomeOutlinedIcon fontSize='inherit' />
         </ButtonNav>
@@ -116,16 +135,7 @@ export const ContainerMenu = styled(StyledContainer)`
 // `
 
 
-const activeClassName = 'nav-item-active'
 
-const StyledNavLink = styled(NavLink).attrs({ activeClassName })`
-  color: ${ ({ theme }) => theme.surface};
- 
-  
-  &.${ activeClassName} {
-  color: ${ ({ theme }) => theme.alternative.main};
-}
-`
 
 // const ContainerBarMusic = styled(StyledContainer)`
 //   box-shadow: ${({ theme }) => 'inset 4px 4px 6px -1px' + theme.primary.dark + ', inset -3px -3px 5px -1px ' + theme.primary.light};
